@@ -1,0 +1,12 @@
+Error: ENOENT: no such file or directory, open 'C:\Users\shiva\Downloads\finance tracker\backend\data\reports.db'
+    at Object.openSync (node:fs:560:18)
+    at Object.writeFileSync (node:fs:2427:35)
+    at persistDatabase (file:///C:/Users/shiva/Downloads/finance%20tracker/backend/src/services/reportingService.js:56:6)
+    at generateMonthlyReport (file:///C:/Users/shiva/Downloads/finance%20tracker/backend/src/services/reportingService.js:120:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async getDashboardSummary (file:///C:/Users/shiva/Downloads/finance%20tracker/backend/src/controllers/dashboardController.js:95:3) {
+  errno: -4058,
+  code: 'ENOENT',
+  syscall: 'open',
+  path: 'C:\\Users\\shiva\\Downloads\\finance tracker\\backend\\data\\reports.db'
+}

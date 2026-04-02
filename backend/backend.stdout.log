@@ -1,0 +1,12 @@
+
+> finance-tracker-backend@1.0.0 dev
+> node --watch src/server.js
+
+Restarting 'src/server.js'
+Backend server running on http://localhost:4000
+Restarting 'src/server.js'
+Backend server running on http://localhost:4000
+Restarting 'src/server.js'
+Backend server running on http://localhost:4000
+Restarting 'src/server.js'
+Backend server running on http://localhost:4000
