@@ -117,15 +117,32 @@ export async function getDashboardSummary(request, response) {
 }
 
 export async function getMonthlyReports(request, response) {
+  const month = normalizeMonth(request.query.month);
+
   if (request.user.role === "admin") {
     const users = await listUsers();
     const standardUserIds = users
       .filter((user) => user.role !== "admin")
       .map((user) => user._id.toString());
+
+    if (month) {
+      await Promise.all(
+        standardUserIds.map((userId) => generateMonthlyReport(userId, month)),
+      );
+    }
+
     const reports = await getAllMonthlyReportsForUsers(standardUserIds);
-    return response.json({ reports });
+    return response.json({
+      reports: month ? reports.filter((report) => report.month === month) : reports,
+    });
+  }
+
+  if (month) {
+    await generateMonthlyReport(request.user._id, month);
   }
 
   const reports = await getAllMonthlyReports(request.user._id);
-  return response.json({ reports });
+  return response.json({
+    reports: month ? reports.filter((report) => report.month === month) : reports,
+  });
 }

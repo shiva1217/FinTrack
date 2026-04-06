@@ -443,6 +443,7 @@ export default function DashboardShell() {
   const [errorMessage, setErrorMessage] = useState("");
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [adminOverview, setAdminOverview] = useState<Awaited<ReturnType<typeof fetchAdminOverview>> | null>(null);
+  const [adminReports, setAdminReports] = useState<MonthlyReport[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth);
@@ -603,12 +604,18 @@ export default function DashboardShell() {
       fetchBudgets(selectedMonth),
     ]);
 
-    const adminData = user?.role === "admin" ? await fetchAdminOverview(selectedMonth) : null;
+    const [adminData, adminReportData] = user?.role === "admin"
+      ? await Promise.all([
+          fetchAdminOverview(selectedMonth),
+          fetchMonthlyReports(selectedMonth),
+        ])
+      : [null, null];
 
     setSummary(dashboardData);
     setExpenses(expenseData.expenses);
     setBudgets(budgetData.budgets);
     setAdminOverview(adminData);
+    setAdminReports(adminReportData?.reports || []);
     pushNotifications(
       user?.role === "admin" && adminData
         ? buildAdminNotifications(adminData)
@@ -909,7 +916,7 @@ export default function DashboardShell() {
     .map((part) => part[0]?.toUpperCase() || "")
     .join("");
   const isAdminUser = user?.role === "admin";
-  const adminReportRows = summary?.reports || [];
+  const adminReportRows = adminReports;
   const adminUsersById = new Map((adminOverview?.userSpending || []).map((entry) => [entry.userId, entry]));
   const isDashboardView = activeNavItem === "dashboard";
   const isBudgetView = activeNavItem === "Budget";
@@ -1214,7 +1221,7 @@ export default function DashboardShell() {
                         <p className="text-sm font-medium text-[var(--auth-muted)]">Reports available</p>
                         <h2 className="mt-2 text-[1.5rem] font-bold leading-tight text-[var(--auth-ink)]">{reportCount}</h2>
                       </div>
-                      <p className="mt-3 text-sm text-[var(--auth-muted)]">Generated SQL report snapshots</p>
+                      <p className="mt-3 text-sm text-[var(--auth-muted)]">Generated report </p>
                     </article>
                   </div>
 
@@ -1231,7 +1238,7 @@ export default function DashboardShell() {
                       <p className="text-sm font-medium text-[var(--auth-muted)]">Top category</p>
                       <h2 className="mt-2 text-[1.5rem] font-bold leading-tight text-[var(--auth-ink)]">{summary?.topCategory?.name || "No data"}</h2>
                     </div>
-                    <p className="mt-3 text-sm text-[var(--auth-muted)]">Use this to spot recurring spend patterns</p>
+                    <p className="mt-3 text-sm text-[var(--auth-muted)]">Maximum spending</p>
                   </article>
 
                   <div className="flex flex-col items-end self-end">

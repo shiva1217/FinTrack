@@ -107,8 +107,9 @@ export async function fetchDashboardSummary(month?: string) {
   return authenticatedRequest<DashboardSummary>(`/dashboard/summary${query}`);
 }
 
-export async function fetchMonthlyReports() {
-  return authenticatedRequest<{ reports: MonthlyReport[] }>("/dashboard/reports");
+export async function fetchMonthlyReports(month?: string) {
+  const query = month ? `?month=${month}` : "";
+  return authenticatedRequest<{ reports: MonthlyReport[] }>(`/dashboard/reports${query}`);
 }
 
 export async function fetchExpenses(queryString = "") {
