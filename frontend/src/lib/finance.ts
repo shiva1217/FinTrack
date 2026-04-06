@@ -1,4 +1,5 @@
 import { getStoredAuthToken } from "@/lib/auth";
+import { getApiUrl } from "@/lib/api";
 
 export type Expense = {
   id: string;
@@ -74,9 +75,6 @@ export type AdminOverview = {
   }>;
 };
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000/api";
-
 async function authenticatedRequest<T>(path: string, options?: RequestInit): Promise<T> {
   const token = getStoredAuthToken();
 
@@ -84,7 +82,7 @@ async function authenticatedRequest<T>(path: string, options?: RequestInit): Pro
     throw new Error("Please sign in to continue.");
   }
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(getApiUrl(path), {
     ...options,
     headers: {
       "Content-Type": "application/json",

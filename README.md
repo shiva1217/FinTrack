@@ -85,5 +85,3 @@ Demo credentials after seeding:
 
 - User: `user@example.com / 123456`
 - Admin: `admin@example.com / 123456`
-
-

@@ -1,3 +1,5 @@
+import { getApiUrl } from "@/lib/api";
+
 export type AuthUser = {
   id: string;
   name: string;
@@ -16,14 +18,11 @@ type AuthResponse = {
   user: AuthUser;
 };
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000/api";
-
 export const AUTH_TOKEN_KEY = "fintrack_auth_token";
 export const AUTH_USER_KEY = "fintrack_auth_user";
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
-  const response = await fetch(`${API_BASE_URL}${path}`, {
+  const response = await fetch(getApiUrl(path), {
     ...options,
     headers: {
       "Content-Type": "application/json",
