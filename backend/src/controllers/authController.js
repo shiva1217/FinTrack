@@ -112,9 +112,17 @@ export async function updateProfile(request, response) {
     }
   }
 
+  const updates = { name, phone, profilePicture };
+
+  if (username) {
+    updates.username = username;
+  } else {
+    updates.username = undefined;
+  }
+
   const updatedUser = await updateUser({
     userId: request.user._id,
-    updates: { name, username, phone, profilePicture },
+    updates,
   });
 
   return response.json({
